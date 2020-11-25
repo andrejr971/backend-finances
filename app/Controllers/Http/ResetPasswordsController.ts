@@ -3,10 +3,11 @@ import User from 'App/Models/User'
 import UserToken from 'App/Models/UserToken'
 import { addHours, isAfter } from 'date-fns'
 import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class ResetPasswordsController {
   public async store({ request, response }: HttpContextContract) {
-    const { token, password } = request.all()
+    const { token, password, logout } = request.all()
 
     const schemaValidator = schema.create({
       token: schema.string({}, [rules.required()]),
@@ -47,6 +48,10 @@ export default class ResetPasswordsController {
             message: 'User not found',
           },
         })
+      }
+
+      if (logout) {
+        await Database.from('api_tokens').where('user_id', confirmToken.userId).delete()
       }
 
       user.password = password
