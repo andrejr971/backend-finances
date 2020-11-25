@@ -1,9 +1,9 @@
 import Mail from '@ioc:Adonis/Addons/Mail'
-import Hash from '@ioc:Adonis/Core/Hash'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 import UserToken from 'App/Models/UserToken'
 import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
+import { v4 as uuid } from 'uuid'
 
 export default class ForgotPasswordsController {
   public async store({ request }: HttpContextContract) {
@@ -25,7 +25,7 @@ export default class ForgotPasswordsController {
 
     const user = await User.findByOrFail('email', email)
 
-    const token = await Hash.make(email)
+    const token = uuid()
 
     await UserToken.create({
       token,

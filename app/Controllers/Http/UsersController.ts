@@ -59,6 +59,8 @@ export default class UsersController {
 
     await user.save()
 
+    await user.preload('avatar')
+
     return user
   }
 }

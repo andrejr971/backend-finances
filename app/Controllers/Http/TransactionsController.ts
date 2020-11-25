@@ -15,10 +15,16 @@ export default class TransactionsController {
 
     const { page } = request.get()
 
+    const month = new Date().getMonth()
+    const year = new Date().getFullYear()
+
     const transactions = await Transaction.query()
       .where('user_id', auth.user.id)
+      .whereRaw('EXTRACT(MONTH FROM created_at) = ?', [month + 1])
+      .whereRaw('EXTRACT(YEAR FROM created_at) = ?', [year])
       .preload('category')
-      .paginate(page || 1, 12)
+      .orderBy('created_at', 'desc')
+      .paginate(page || 1, 6)
 
     return transactions
   }

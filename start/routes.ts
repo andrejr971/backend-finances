@@ -6,22 +6,24 @@ Route.group(() => {
   Route.post('reset-password', 'ResetPasswordsController.store')
 
   Route.post('users', 'UsersController.store')
+  Route.get('/files/:id', 'FilesController.index')
 
   Route.group(() => {
     Route.get('balance', 'DashboardController.index')
+    Route.get('charts', 'ChartsController.index')
 
     Route.get('users', 'UsersController.index')
     Route.put('users/:id', 'UsersController.update')
     Route.get('users/:id', 'UsersController.show')
-    Route.patch('users/avatar', 'UpdateAvatarUsersController.store')
+    Route.put('users/:id/avatar', 'UpdateAvatarUsersController.store')
 
     Route.get('categories', 'CategoriesController.index')
     Route.post('categories', 'CategoriesController.store')
     Route.put('categories/:id', 'CategoriesController.update')
     Route.get('categories/:id', 'CategoriesController.show')
 
-    Route.get('/files/:id', 'FilesController.index')
-
     Route.resource('transactions', 'TransactionsController').apiOnly()
+
+    Route.delete('/logout', 'SessionsController.destroy')
   }).middleware('auth')
 }).prefix('api/v1')
